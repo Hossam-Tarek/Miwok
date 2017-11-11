@@ -42,7 +42,7 @@ public class NumbersActivity extends AppCompatActivity {
         words.add("Ten");
 
         // Create array adapter instance
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_gallery_item, words);
+        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, words);
 
         // Find the list view and attach it to object
         ListView listView = (ListView) findViewById(R.id.list);
