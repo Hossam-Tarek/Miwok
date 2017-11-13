@@ -38,7 +38,7 @@ public class ColorsActivity extends AppCompatActivity {
         colors.add(new Word("dusty yellow", "topiisә", R.drawable.color_dusty_yellow));
         colors.add(new Word("mustard yellow", "chiwiitә", R.drawable.color_dusty_yellow));
 
-        WordAdapter adapter = new WordAdapter(this, colors);
+        WordAdapter adapter = new WordAdapter(this, colors, R.color.category_colors);
 
         // Find the list view and attach it to object
         ListView listView = (ListView) findViewById(R.id.list);

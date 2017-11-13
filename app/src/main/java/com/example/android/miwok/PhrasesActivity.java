@@ -42,7 +42,7 @@ public class PhrasesActivity extends AppCompatActivity {
 
 
 
-        WordAdapter adapter = new WordAdapter(this, words);
+        WordAdapter adapter = new WordAdapter(this, words, R.color.category_phrases);
 
         // Find the list view and attach it to object
         ListView listView = (ListView) findViewById(R.id.list);
