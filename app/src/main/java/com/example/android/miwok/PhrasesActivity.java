@@ -15,13 +15,18 @@
  */
 package com.example.android.miwok;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class PhrasesActivity extends AppCompatActivity {
+public class PhrasesActivity extends AppCompatActivity
+{
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,5 +64,16 @@ public class PhrasesActivity extends AppCompatActivity {
 
         // Set adapter to the list view
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
+            {
+                Word word = (Word) adapterView.getItemAtPosition(position);
+                mediaPlayer = MediaPlayer.create(PhrasesActivity.this, word.getAudioResourceID());
+                mediaPlayer.start();
+            }
+        });
     }
 }
