@@ -15,6 +15,8 @@
  */
 package com.example.android.miwok;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,10 +38,36 @@ public class FamilyActivity extends AppCompatActivity
         }
     };
 
+    private AudioManager audioManager;
+    private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener()
+    {
+        @Override
+        public void onAudioFocusChange(int focusChange)
+        {
+            switch (focusChange)
+            {
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
+                    mediaPlayer.pause();
+                    mediaPlayer.seekTo(0);
+                    break;
+
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    mediaPlayer.start();
+                    break;
+
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    releaseMediaPlayer();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         ArrayList<Word> familyMembers = new ArrayList<Word>();
         familyMembers.add(new Word("father", "әpә",
@@ -80,9 +108,15 @@ public class FamilyActivity extends AppCompatActivity
             {
                 releaseMediaPlayer();
                 Word word = (Word) adapterView.getItemAtPosition(position);
-                mediaPlayer = MediaPlayer.create(FamilyActivity.this, word.getAudioResourceID());
-                mediaPlayer.start();
-                mediaPlayer.setOnCompletionListener(completionListener);
+
+                int result = audioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                        audioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+                {
+                    mediaPlayer = MediaPlayer.create(FamilyActivity.this, word.getAudioResourceID());
+                    mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(completionListener);
+                }
             }
         });
     }
@@ -101,6 +135,8 @@ public class FamilyActivity extends AppCompatActivity
             // setting the media player to null is an easy way to tell that the media player
             // is not configured to play an audio file at the moment.
             mediaPlayer = null;
+
+            audioManager.abandonAudioFocus(onAudioFocusChangeListener);
         }
     }
 
