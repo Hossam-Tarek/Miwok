@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 
 public class PhrasesActivity extends AppCompatActivity
@@ -102,5 +103,12 @@ public class PhrasesActivity extends AppCompatActivity
             // is not configured to play an audio file at the moment.
             mediaPlayer = null;
         }
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        releaseMediaPlayer();
     }
 }
